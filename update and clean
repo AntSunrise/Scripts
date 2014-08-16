@@ -1,0 +1,16 @@
+#!/bin/bash
+ 
+sudo apt-get update
+sudo apt-get dist-upgrade
+sudo apt-get upgrade
+sudo apt-get install -f
+sudo apt-get autoclean
+sudo apt-get autoremove -y
+sudo apt-get clean
+ 
+ 
+dpkg --purge `COLUMNS=300 dpkg -l "*" | egrep "^rc" | cut -d" " -f3`
+ 
+echo -n "# Remove old kernels "
+dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get --dry-run remove
+dpkg -l linux-* | awk '/^ii/{ print $2}' | grep -v -e `uname -r | cut -f1,2 -d"-"` | grep -e [0-9] | xargs sudo apt-get -y remove
